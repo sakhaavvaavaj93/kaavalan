@@ -613,9 +613,9 @@ def process_update(self, update):
     now = datetime.datetime.utcnow()
     cnt = CHATS_CNT.get(update.effective_chat, 0)
 
-    t = CHATS_TIME.get(update.effective_chat.id, datetime.datetime(1970, 1, 1))
+    t = CHATS_TIME.get(update.effective_chat, datetime.datetime(1970, 1, 1))
     if t and now > t + datetime.timedelta(0, 1):
-        CHATS_TIME[update.effective_chat.id] = now
+        CHATS_TIME[update.effective_chat] = now
         cnt = 0
     else:
         cnt += 1
@@ -623,7 +623,7 @@ def process_update(self, update):
     if cnt > 10:
         return
 
-    CHATS_CNT[update.effective_chat.id] = cnt
+    CHATS_CNT[update.effective_chat] = cnt
     for group in self.groups:
         try:
             for handler in (x for x in self.handlers[group] if x.check_update(update)):
